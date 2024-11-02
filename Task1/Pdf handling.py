@@ -1,6 +1,8 @@
 import pypdf
 from math import cos, atan, pi
 from spire.pdf import *
+from docx2pdf import convert as doc_convert
+from pptxtopdf import convert as ppt_convert
 
 
 def take_pages_input(prompt, no_of_pages):
@@ -110,7 +112,7 @@ def split_pdf():
             print("Please enter a valid page range!!\n\n")
             return
         split = pypdf.PdfWriter()
-        split.append(pdf, pages=(pages[0], pages[1]))
+        split.append(pdf, pages=(pages[0]-1, pages[1]-1))
         split.write(p[:-4] + "_split" + str(i + 1) + ".pdf")
         print("Split", i + 1, "successful, stored in original directory")
     print("\n")
@@ -302,7 +304,8 @@ def scale_pages():
 while True:
     print("PDF handling".center(50))
     print("1. Merge pdf\n2. Split\n3. Reorganise\n4. Compress PDF\n5. Rotate pages\n6. Add/Remove password")
-    print("7. Add bookmark\n8. Edit bookmark\n9. Delete bookmark\n10. Scale pages\n11. Exit")
+    print("7. Add bookmark\n8. Edit bookmark\n9. Delete bookmark\n10. Scale pages\n11. Convert to pdf\n12. Extract text")
+    print("13. Exit")
     ch = input("Enter choice: ")
     try:
         ch = int(ch)
@@ -335,6 +338,27 @@ while True:
     elif ch == 10:
         scale_pages()
     elif ch == 11:
+        p = input("Enter path to file that is to be converted to pdf: ").strip().strip('"')
+        try:
+            doc_convert(p, p.rstrip(".docx") + ".pdf")
+        except:
+            try:
+                ppt_convert(p, p[:p.rfind("\\")])
+            except:
+                print("Unable to convert!!\n\n")
+                continue
+        print("File successfully converted!!\n\n")
+    elif ch == 12:
+        p, pdf = take_path_input()
+        if not p:
+            continue
+        pdf = pypdf.PdfReader(p)
+        f = open(p[:-4]+".txt", "wb")
+        for page in pdf.pages:
+            f.write(str(page.extract_text(extraction_mode="layout")).encode())
+        f.close()
+        print("Text successfully extracted!!\n\n")
+    elif ch == 13:
         print("Exiting...")
         break
     else:
