@@ -16,3 +16,5 @@ But the free version of Spire only allow 10 pages to be processed, so these 3 fu
 
 #### Docx2pdf and pptxtopdf
 These modules are used to convert docx and pptx file to pdf files
+
+All functions except merge will save the pdf in the original directory itself, merge function will ask user which directory to store pdf in.
