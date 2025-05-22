@@ -1,4 +1,0 @@
-pypdf
-spire.pdf
-docx2pdf
-pptxtopdf
